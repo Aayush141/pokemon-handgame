@@ -1,0 +1,45 @@
+from itertools import combinations
+
+pokemon_types = [
+    "Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison", "Ground", "Flying",
+    "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"
+]
+
+#matrix
+super_effective = {
+    "Normal": [],
+    "Fire": ["Grass", "Ice", "Bug", "Steel"],
+    "Water": ["Fire", "Ground", "Rock"],
+    "Electric": ["Water", "Flying"],
+    "Grass": ["Water", "Ground", "Rock"],
+    "Ice": ["Grass", "Ground", "Flying", "Dragon"],
+    "Fighting": ["Normal", "Ice", "Rock", "Dark", "Steel"],
+    "Poison": ["Grass", "Fairy"],
+    "Ground": ["Fire", "Electric", "Poison", "Rock", "Steel"],
+    "Flying": ["Grass", "Fighting", "Bug"],
+    "Psychic": ["Fighting", "Poison"],
+    "Bug": ["Grass", "Psychic", "Dark"],
+    "Rock": ["Fire", "Ice", "Flying", "Bug"],
+    "Ghost": ["Psychic", "Ghost"],
+    "Dragon": ["Dragon"],
+    "Dark": ["Psychic", "Ghost"],
+    "Steel": ["Ice", "Rock", "Fairy"],
+    "Fairy": ["Fighting", "Dragon", "Dark"]
+}
+
+def is_valid_set(type_set):
+    strong_against = {t: set() for t in type_set}
+    weak_against = {t: set() for t in type_set}
+    
+    for attack in type_set:
+        for target in type_set:
+            if target in super_effective[attack]:
+                strong_against[attack].add(target)
+                weak_against[target].add(attack)
+    
+    return all(len(strong_against[t]) == 2 and len(weak_against[t]) == 2 for t in type_set)
+
+for type_comb in combinations(pokemon_types, 5):
+    if is_valid_set(type_comb):
+        print("Valid type set:", type_comb)
+        break
